@@ -1,28 +1,31 @@
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { RegisterInput, registerUser } from '@/apis/login/route';
 
 const RegisterPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
+  const [form, setForm] = useState<RegisterInput>({ nombre: '', email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (password !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
+    setError('');
+    setLoading(true);
+    try {
+      await registerUser(form);
+      alert('Usuario registrado exitosamente!');
+      router.push('/login');
+    } catch (err: any) {
+      setError(err.message || 'Error al registrar el usuario');
+    } finally {
+      setLoading(false);
     }
-
-    // Aquí iría la lógica para registrar el usuario (API, Firebase, etc)
-    console.log('Correo:', email);
-    console.log('Contraseña:', password);
-
-    // Simulación de registro exitoso
-    alert('Usuario registrado exitosamente');
-    router.push('/login'); // Redirige a login
   };
 
   const goToLogin = () => {
@@ -36,44 +39,39 @@ const RegisterPage = () => {
         <h2 className="text-2xl font-bold text-[#4B3621] mb-2">Regístrate en Patitas Felices</h2>
         <p className="text-[#8C6A4D] mb-6">Crea una cuenta para comenzar</p>
 
-        <form onSubmit={handleRegister} className="space-y-4 text-left">
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
+          <div>
+            <label className="block text-sm font-medium text-[#4B3621]">Username</label>
+            <input
+              type="text"
+              name='nombre'
+              className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-[#4B3621]">Correo electrónico</label>
             <input
               type="email"
+              name='email'
               className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
               required
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-[#4B3621]">Contraseña</label>
             <input
               type="password"
+              name='password'
               className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChange}
               required
               minLength={6}
               placeholder="Mínimo 6 caracteres"
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-[#4B3621]">Confirmar contraseña</label>
-            <input
-              type="password"
-              className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={6}
-              placeholder="Repite tu contraseña"
-            />
-          </div>
-
           <button
             type="submit"
             className="w-full bg-[#8C6A4D] hover:bg-[#4B3621] text-white py-2 rounded-lg transition"

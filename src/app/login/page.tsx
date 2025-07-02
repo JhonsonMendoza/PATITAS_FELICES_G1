@@ -1,20 +1,28 @@
-"use client"
+'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { LoginInput, loginUser } from '@/apis/login/route';
+import { useAuth } from '@/context/authContext';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const router = useRouter();
+  const { setToken } = useAuth(); // ✅ Importante: usamos el contexto
+  const [form, setForm] = useState<LoginInput>({ email: '', password: '' });
+  const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aquí va la lógica de autenticación
-    console.log('Correo:', email);
-    console.log('Contraseña:', password);
-
-    // Simulación de éxito
-    router.push('/home');
+    try {
+      const { token } = await loginUser(form);
+      setToken(token); // ✅ usamos el contexto para guardar y propagar el token
+      router.push('/home');
+    } catch {
+      setError('Credenciales inválidas');
+    }
   };
 
   const goToRegister = () => {
@@ -28,14 +36,14 @@ const LoginPage = () => {
         <h2 className="text-2xl font-bold text-[#4B3621] mb-2">Bienvenido a Patitas Felices</h2>
         <p className="text-[#8C6A4D] mb-6">Inicia sesión para continuar</p>
 
-        <form onSubmit={handleLogin} className="space-y-4 text-left">
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
             <label className="block text-sm font-medium text-[#4B3621]">Correo electrónico</label>
             <input
-              type="email"
+              type="text"
+              name='email'
               className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
               required
             />
           </div>
@@ -44,12 +52,14 @@ const LoginPage = () => {
             <label className="block text-sm font-medium text-[#4B3621]">Contraseña</label>
             <input
               type="password"
+              name='password'
               className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChange}
               required
             />
           </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
             type="submit"

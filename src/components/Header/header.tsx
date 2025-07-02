@@ -31,7 +31,7 @@ const Header = () => {
         <nav className="hidden md:flex gap-8 text-lg font-medium">
           {[
             { name: "Mis Mascotas", path: "/mascotas" },
-            { name: "Medicinas", path: "/medicinas" },
+            { name: "Medicinas", path: "/vacunas" },
             { name: "Horarios de Juego", path: "/horarios" },
           ].map((item) => (
             <button

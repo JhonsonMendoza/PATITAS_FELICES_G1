@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Patitas Felices | Login",
+  title: "Patitas Felices | Register",
   description: "Welcome to Patitas Felices, your pet adoption platform",
 };
 
