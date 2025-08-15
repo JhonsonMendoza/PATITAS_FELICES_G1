@@ -38,25 +38,31 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
-            <label className="block text-sm font-medium text-[#4B3621]">Correo electrónico</label>
-            <input
-              type="text"
-              name='email'
-              className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
-              onChange={handleChange}
-              required
-            />
+          <label htmlFor="email" className="block text-sm font-medium text-[#4B3621]">
+  Correo electrónico
+</label>
+<input
+  id="email"
+  type="email"
+  name="email"
+  className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
+  onChange={handleChange}
+  required
+/>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#4B3621]">Contraseña</label>
-            <input
-              type="password"
-              name='password'
-              className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
-              onChange={handleChange}
-              required
-            />
+<label htmlFor="password" className="block text-sm font-medium text-[#4B3621]">
+  Contraseña
+</label>
+<input
+  id="password"
+  type="password"
+  name="password"
+  className="text-black w-full px-4 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6A4D]"
+  onChange={handleChange}
+  required
+/>
           </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
